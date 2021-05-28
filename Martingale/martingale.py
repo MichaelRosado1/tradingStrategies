@@ -1,5 +1,6 @@
 import alpaca_trade_api as tradeapi
 import os
+from alpaca_trade_api.entity import Position
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -74,6 +75,41 @@ class MartingaleTrader(object):
         except Exception as e:
             print(e)
                 
+    @conn.on(r'trade_updates')
+    async def handle_trade(self, conn, channel, data):
+        symbol = data.order['symbol']
+        if symbol != self.symbol:
+            #this means that this is not an order that we are looking to work with
+            return
+        
+        event_type = data.event
+        qty = data.order['filled_qty']
+        side = data.order['side']
+        oid = data.order['id']
+
+        if event_type == 'fill' or event_type == 'partial_fill':
+            self.position = int(data.position_qty)
+            print(f'New position size due to order fill: {self.position}')
+            if (event_type == 'fill' and self.current_order and self.current_order.id == oid):
+                self.current_order = None
+
+        elif event_type == 'rejected' or event_type == 'canceled':
+            if self.current_order and self.current_order and self.current_order.id == oid:
+                self.current_order = None
+
+        elif event_type != 'new':
+            print(f'Unexpected order event type {event_type} received')
+
+    conn.run(['trade_updates'])
+
+
+    @conn.on(r'A$', [self.symbol])
+    async def handle_agg(self, conn, channel, data):
+        tick_open = self.last_price
+        tick_close = data.close
+        self.last_price = tick_close
+    
+    conn.run([f'A.{self.symbol}'])
 
         
 if __name__ == '__main__':
