@@ -35,12 +35,55 @@ class MartingaleTrader(object):
             #since we are holding no positions, then set that quantity to 0
             self.position = 0
         
+
+    def send_order(self, target_qty):
+        if self.current_order is not None:
+            self.api.cancel_order(self.current_order.id)
+        
+        #diff between the amount we want to buy and the amount that we are currently holding
+        delta = target_qty - self.position
+
+        if delta == 0:
+            #we don't want to do anything in this case
+            return
+        
+        print(f'Ordering towards {target_qty}...')
+
+        try:
+            if delta > 0:
+                #the amount we want to buy is delta
+                buy_qty = delta
+
+                if self.position < 0:
+                    buy_qty = min(abs(self.position), buy_qty)
+                print(f'Buying {buy_qty} shares.')
+
+                self.current_order = self.api.submit_order(
+                    self.symbol, buy_qty, 'buy', 'limit', 'day', self.last_price
+                )
+            #if delta is less than 0, we are going to want to sell shares not buy
+            elif delta < 0:
+                sell_qty = abs(delta)
+                if self.position > 0:
+                    sell_qty = min(abs(self.position), sell_qty)
+                print(f'Selling {sell_qty} shares')
+                self.current_order = self.api.submit_order(
+                    self.symbol, sell_qty, 'sell', 'limit', 'day', self.last_price
+                )
+        
+        except Exception as e:
+            print(e)
+                
+
+        
+if __name__ == '__main__':
+    trader = MartingaleTrader()
+
+    trader.send_order(5)
         
     
 
 
-trade = MartingaleTrader()
-print(trade.position)
 
 
 
