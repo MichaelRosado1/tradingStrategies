@@ -21,6 +21,19 @@ class MartingaleTrader(object):
         #closing price of last aggregate
         self.last_price = 0
 
+        #seconds between updating streaks
+        self.tick_size = 5
+        self.tick_index = 0
+
+        #percentage of buying power allocated
+        self.base_bet = 10
+
+        #info on the current streak
+        self.streak_count = 0
+        self.streak_start = 0
+        self.streak_increasing = True
+
+
         #api connection
         self.api = tradeapi.REST(
             self.key_id, 
