@@ -40,6 +40,9 @@ class MartingaleTrader(object):
             self.secret_key, 
             self.base_url
         )
+        
+        #before we start trading we should cancel orders
+        self.api.cancel_all_orders()
 
         # we need to get the current position
         try:
@@ -48,7 +51,57 @@ class MartingaleTrader(object):
         except:
             #since we are holding no positions, then set that quantity to 0
             self.position = 0
+
+        #this will give us all account information
+        account_info = self.api.get_account()
+        self.equity = float(account_info.equity)
+        self.margin_multiplier = float(account_info.multiplier)
+        total_buying_power = self.margin_multiplier * self.equity
+        print(f'Initial total buying power = {total_buying_power}')
         
+
+    
+    def start_trading(self):
+        conn = Stream(
+                self.key_id, 
+                self.secret_key, 
+                base_url=self.base_url, 
+                data_feed='iex')
+
+        #listens for second aggregates 
+        async def handle_bar(bar):
+            self.tick_index = (self.tick_index + 1) % self.tick_size
+            if self.tick_index == 0:
+                tick_open = self.last_price
+                tick_close = bar.close
+                self.last_price = tick_close
+                self.process_current_tick(tick_open, tick_close)
+    stream.subscribe_bars(handle_bar, self.symbol)
+
+    async def handle_trade_updates(data):
+        symbol = data.order['symbol']
+        if symbol != self.symbol:
+            #we only want to work with the chosen symbol
+            return
+        event_type = data.event
+        qty = int(data.order['filled_qty'])
+        side = data.order['side']
+        oid = data.order['id']
+
+        if event_type == 'fill' or event_type == 'partial_fill':
+            self.position = int(data.position_qty)
+            print(f'New position size due to order fill: {self.position}')
+            if (event_type == 'fill' and self.current_order and self.current_order
+                    and self.current_order.id == oid):
+                self.current_order = None
+        elif event_type == 'rejected' or event_type == 'canceled':
+            if self.current_order and self.current_order.id == oid:
+                self.current_order = None
+        elif event_type != 'new':
+            print(f'Unexpected order event type {event_type} received')
+        
+    stream.subscribe_trade_updates(handle_trade_updates)
+    stream.run()
 
     def send_order(self, target_qty):
         if self.current_order is not None:
