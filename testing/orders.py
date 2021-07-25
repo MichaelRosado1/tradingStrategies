@@ -1,4 +1,6 @@
 import alpaca_trade_api as tradeapi
+import numpy as np
+import matplotlib.pyplot as plt
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,16 +21,36 @@ class Trader:
 			self.secret_key, 
 			self.base_url
 		)
+	
+	def start_trading(self):
+		clock = self.api.get_clock()
+		figure = plt.scatter(0, 0)
+		#while loop will only start during market hours
+		while (clock.is_open):
+			#trading logic here
+			plt.plot(self.api.get_account().cash)
+			plt.show()
+
+
+		print('market is closed')
+
+		
+
+			
+
+
+		
 
 	def check_account_details(self):
 		account = self.api.get_account()
 		print('${} is available as buying power.'.format(account.buying_power))
+	
 
 
 
 def main():
-	trader = Trader('AAPL', 10)
-	trader.check_account_details()
+	trader = Trader('AAPL')
+	trader.start_trading()
 
 
 
