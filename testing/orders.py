@@ -24,15 +24,23 @@ class Trader:
 	
 	def start_trading(self):
 		clock = self.api.get_clock()
-		figure = plt.scatter(0, 0)
-		#while loop will only start during market hours
-		while (clock.is_open):
+        #while loop will only start during market hours
+		if (clock.is_open):
+			self.api.submit_order(
+				symbol=self.symbol,
+				qty=self.order_size,
+				side='buy',
+				type='market',
+				time_in_force='gtc'
+			)
+        #I need to do more research on a trading strategy I want to 
+        #implement, until then, I will just order single stocks
+        #while (clock.is_open):
 			#trading logic here
-			plt.plot(self.api.get_account().cash)
-			plt.show()
+            
+            
 
 
-		print('market is closed')
 
 		
 
