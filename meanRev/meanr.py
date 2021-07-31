@@ -5,14 +5,6 @@
 
 '''
 
-#trade library
-import alpaca_trade_api as tradeapi
-
-#libraries to get env vars
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 
 #main function will handle trade initialization
 def main():
