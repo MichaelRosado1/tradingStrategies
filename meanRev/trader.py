@@ -35,3 +35,29 @@ class Trader:
             self.base_url
         )
 
+    def account_balance(self):
+        account = self.api.get_account()
+        print('${} is available as on-hand cash.'.format(account.cash))
+
+    def clear_orders(self):
+        self.api.cancel_all_orders()
+
+    def submit_order(self):
+        self.api.submit_order(
+            symbol=self.symbol,
+            qty=self.order_size,
+            side='buy',
+            type='market',
+            time_in_force='gtc'
+        )
+
+    def sell_order(self):
+        self.api.submit_order(
+            symbol=self.symbol,
+            qty=self.order_size,
+            side='sell',
+            type='limit',
+            time_in_force='gtc'
+        )
+
+
