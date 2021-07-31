@@ -35,13 +35,16 @@ class Trader:
             self.base_url
         )
 
+    # prints the amount of cash available on the account
     def account_balance(self):
         account = self.api.get_account()
         print('${} is available as on-hand cash.'.format(account.cash))
 
+    #clears all orders
     def clear_orders(self):
         self.api.cancel_all_orders()
 
+    #handles buy orders
     def submit_order(self):
         self.api.submit_order(
             symbol=self.symbol,
@@ -51,6 +54,7 @@ class Trader:
             time_in_force='gtc'
         )
 
+    #handles sell orders
     def sell_order(self):
         self.api.submit_order(
             symbol=self.symbol,
@@ -59,5 +63,17 @@ class Trader:
             type='limit',
             time_in_force='gtc'
         )
+
+    #prints all the positions in the portfolio
+    def view_positions(self):
+        portfolio = self.api.list_positions()
+        for position in portfolio:
+            print('{} shares of {}'.format(position.qty, position.symbol))
+
+
+    def check_market_open(self):
+        clock = self.api.get_clock()
+        return clock.is_open
+
 
 
