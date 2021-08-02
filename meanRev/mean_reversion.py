@@ -11,6 +11,8 @@ class mean_reversion:
         #this will be the trader object that contains all of the buy/sell functions for the api
         self.trader = trader
         self.risk = .001
+        self.moving_average = None
+        self.stop_loss = .002 
         
     def calculate_moving_average(self):
         bars = self.trader.get_historical_data()
@@ -18,5 +20,8 @@ class mean_reversion:
         total = 0
         for bar in bars:
             total += bar.o
-        return total/100
+        ave = total/100
+
+        self.moving_average = ave
+        return ave
 
