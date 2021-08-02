@@ -4,11 +4,18 @@
 
 
 '''
-
+from trader import Trader
+from mean_reversion import mean_reversion
 
 #main function will handle trade initialization
 def main():
-    print('')
+    trader = Trader('SPY', 10)
+
+    strat = mean_reversion(trader)
+
+    ave = strat.calculate_moving_average()
+
+    print('{} has a 100 day moving average of {}'.format(trader.symbol, ave))
 
 
 

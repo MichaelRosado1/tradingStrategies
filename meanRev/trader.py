@@ -77,8 +77,8 @@ class Trader:
 
     #function to return a list of bars based on the ticker symbol
     def get_historical_data(self):
-        #pulls the data from the last 90 trading days
-        barset = self.api.get_barset(self.symbol, 'day', limit=90)
+        #pulls the data from the last 100 trading days
+        barset = self.api.get_barset(self.symbol, 'day', limit=100)
         #this will be only the data from the ticker we chose
         ticker_bar_set = barset[self.symbol]
 
