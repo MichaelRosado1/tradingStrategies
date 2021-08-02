@@ -75,5 +75,18 @@ class Trader:
         clock = self.api.get_clock()
         return clock.is_open
 
+    #function to return a list of bars based on the ticker symbol
+    def get_historical_data(self):
+        #pulls the data from the last 90 trading days
+        barset = self.api.get_barset(self.symbol, 'day', limit=90)
+        #this will be only the data from the ticker we chose
+        ticker_bar_set = barset[self.symbol]
+
+        #returns an array of bars that contain price information 
+        #that we can use to calculate different indicators
+        return ticker_bar_set
+
+
+
 
 
