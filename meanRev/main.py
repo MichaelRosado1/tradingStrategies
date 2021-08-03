@@ -13,9 +13,7 @@ def main():
 
     strat = mean_reversion(trader)
 
-    ave = strat.calculate_moving_average()
-
-    print('{} has a 100 day moving average of {}'.format(trader.symbol, ave))
+    strat.start_trading()
 
 
 
