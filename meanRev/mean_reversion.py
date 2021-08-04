@@ -26,13 +26,8 @@ class mean_reversion:
         return ave
 
     def start_trading(self):
-        conn = Stream(
-            self.trader.__key_id,
-            self.trader.__secret_key, 
-            self.trader.__base_url,
-            data_feed='iex'
-        )
-        #web socket connection
+        conn = self.trader.__api.stream2.StreamConn(self.trader.__key_id, self.trader.__secret_key, self.trader.__base_url)
+
         @conn.on(r'^account_updates$')
         async def on_account_updates(conn, channel, account):
             print('account', account)
@@ -40,6 +35,5 @@ class mean_reversion:
         @conn.on(r'^trade_updates$')
         async def on_trade_updates(conn, channel, trade):
             print('trade', trade)
-        
 
 
