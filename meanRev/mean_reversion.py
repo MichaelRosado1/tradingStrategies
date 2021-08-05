@@ -4,8 +4,9 @@ The mean_reversion file will contain all of the trading logic required for the m
 
 
 '''
-import websocket
-import json
+import stream
+import trader
+
 class mean_reversion:
     def __init__(self, trader):
         #this will be the trader object that contains all of the buy/sell functions for the api
@@ -26,6 +27,10 @@ class mean_reversion:
         #and will cause too many api calls 
         self.moving_average = ave
         return ave
+
+    def start_trading(self):
+        stream.load_trader(self.trader.__key_id, self.trader.__secret_key, self.symbol)
+        stream.connect()
 
 
 
