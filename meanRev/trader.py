@@ -88,7 +88,12 @@ class Trader:
         #that we can use to calculate different indicators
         return ticker_bar_set
 
+    def view_gain_loss(self):
+        account = self.__api.get_account()
 
+        balance_change = float(account.equity) - float(account.last_equity)
+
+        print('Todays portfolio balance change: {}', balance_change)
 
 
 
