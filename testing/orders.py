@@ -58,7 +58,7 @@ class Trader:
 
 def main():
 	trader = Trader('AAPL')
-	trader.start_trading()
+	trader.check_account_details()
 
 
 

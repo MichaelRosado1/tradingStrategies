@@ -11,11 +11,9 @@ SYMBOL = ''
 
 def _on_open(ws):
     print('opened conection')
-
-    trader = get_trader()
     auth_data = {
         'action': 'authenticate',
-        'data': {'key_id': trader.__key_id, 'secret_key': trader.__secret_key}
+        'data': {'key_id': API_KEY, 'secret_key': SECRET_KEY}
     }
 
     ws.send(json.dumps(auth_data))
@@ -41,7 +39,7 @@ def connect():
 
 
 # this function is necessary to get the trader info from the algo file
-def load_trader(id, secret_id, symbol):
-    API_KEY = id
-    SECRET_KEY = secret_id
-    SYMBOL = symbol
+def load_trader(trader):
+    API_KEY = trader.key_id
+    SECRET_KEY = trader.secret_key
+    SYMBOL = trader.symbol 
