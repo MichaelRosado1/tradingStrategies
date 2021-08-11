@@ -9,7 +9,7 @@ SECRET_KEY = ''
 SYMBOL = ''
 
 
-def _on_open(ws):
+def on_open(ws):
     print('opened conection')
     auth_data = {
         'action': 'authenticate',
@@ -23,7 +23,7 @@ def _on_open(ws):
     ws.send(json.dumps(listen_message))
 
 
-def _on_message(ws, message):
+def on_message(ws, message):
     print('recieved message: {}', message)
 
 
@@ -33,8 +33,8 @@ def on_close(ws):
 
 def connect():
     socket = 'wss://data.alpaca.markets/stream'
-
-    ws = websocket.WebSocketApp(socket, on_open=on_open, on_message=on_message)
+    
+    ws = websocket.WebSocketApp(socket, on_open=on_open, on_message=on_message, on_close=on_close)
     ws.run_forever()
 
 
