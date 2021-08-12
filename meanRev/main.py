@@ -11,6 +11,7 @@ from mean_reversion import meanReversion
 #main function will handle trade initialization
 def main():
     trader = Trader('SPY', 10)
+
     stream.load_trader(trader)
 
     strat = meanReversion(trader)
