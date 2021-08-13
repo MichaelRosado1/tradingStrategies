@@ -3,10 +3,8 @@
 '''
 import json
 import websocket
-
-API_KEY = ''
-SECRET_KEY = ''
-SYMBOL = ''
+import os
+from dotenv import load_dotenv
 
 
 def on_open(ws):
@@ -14,8 +12,8 @@ def on_open(ws):
     auth_data = {
         'action': 'authenticate',
         'data': {
-                'key_id': API_KEY, 
-                'secret_key': SECRET_KEY
+                'key_id': os.getenv('API_KEY'),
+                'secret_key': os.getenv('SECRET_KEY')
             }
     }
 
@@ -27,7 +25,7 @@ def on_open(ws):
 
 
 def on_message(ws, message):
-    print('recieved message: {}', json.dumps(message, indent=4, sort_keys=True))
+    print('recieved message: {}', message) 
 
 
 def on_close(ws):
@@ -40,10 +38,3 @@ def connect():
     ws = websocket.WebSocketApp(socket, on_open=on_open, on_message=on_message, on_close=on_close)
     ws.run_forever()
 
-
-# this function is necessary to get the trader info from the algo file
-def load_trader(trader):
-    API_KEY = trader.key_id
-    print(API_KEY)
-    SECRET_KEY = trader.secret_key
-    SYMBOL = trader.symbol 
