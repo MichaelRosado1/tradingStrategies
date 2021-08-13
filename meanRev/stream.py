@@ -19,13 +19,15 @@ def on_open(ws):
 
     ws.send(json.dumps(auth_data))
 
-    #listen_message = {'action': 'listen', 'data': {'streams': ['Q.SPY']}}
+    listen_message = {'action': 'listen', 'data': {'streams': ['minute.SPY']}}
 
-    #ws.send(json.dumps(listen_message))
+    ws.send(json.dumps(listen_message))
 
 
 def on_message(ws, message):
-    print('recieved message: {}', message) 
+    #I need to refactor the trade logic class in order to allow this file to communicate
+    #with is often
+    print(message)
 
 
 def on_close(ws):

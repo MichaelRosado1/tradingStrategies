@@ -13,6 +13,7 @@ class meanReversion:
         self.risk = .001
         self.moving_average = None
         self.stop_loss = .002
+        self.last_price = -1 
 
     def calculate_moving_average(self):
         bars = self.trader.get_historical_data()
@@ -24,5 +25,16 @@ class meanReversion:
         self.moving_average = ave
         return ave
 
+    def update_price(self, new_price):
+        self.last_price = new_price
+
     def start_trading(self):
+        #websocket connection
         stream.connect()
+
+        if (self.last_price != -1):
+            print(last_price)
+    
+
+
+
